@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Money Beats by Skimp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            rays: {
+              black: '#050505',
+              forest: '#0B2B16',
+              lime: '#39FF14',
+              red: '#E60000',
+              white: '#F3F4F6',
+              gray: '#1A1A1A'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          boxShadow: {
+            'brutal': '4px 4px 0px 0px rgba(57, 255, 20, 1)',
+            'brutal-red': '4px 4px 0px 0px rgba(230, 0, 0, 1)',
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+  </head>
+<body class="bg-rays-black text-rays-white min-h-screen font-sans antialiased selection:bg-rays-lime selection:text-rays-black">
+  <div id="root"></div>
+  <script type="module" src="./index.tsx"></script></body>
+</html>
