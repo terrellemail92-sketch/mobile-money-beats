@@ -1,8 +1,10 @@
 import { GoogleGenAI } from '@google/genai';
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
-
 export const generateBeatBreakdown = async (title: string, tags: string[]): Promise<string> => {
+  if (!import.meta.env.VITE_GEMINI_API_KEY) {
+    return "Breakdown unavailable — check back soon.";
+  }
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   try {
     const prompt = `
       You are Skimp, the lead producer for Mobile Money. Write a short, gritty, and engaging "Sample Breakdown" (max 2 paragraphs) for a loop/pack titled "${title}" with the following tags: ${tags.join(', ')}.
