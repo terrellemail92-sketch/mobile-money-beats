@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Sparkles, X } from 'lucide-react';
 import { BeatCard } from '../components/BeatCard';
-import { MOCK_BEATS } from '../constants';
 import { Beat, LicenseType } from '../types';
 import { generateBeatBreakdown } from '../services/geminiService';
 
@@ -12,6 +11,8 @@ interface MarketplaceProps {
 export const Marketplace: React.FC<MarketplaceProps> = ({ onAddToCart }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'All' | 'Loop' | 'Loop Pack'>('All');
+  const [beats, setBeats] = useState<Beat[]>([]);
+  const [loadingBeats, setLoadingBeats] = useState(true);
   const [breakdownModal, setBreakdownModal] = useState<{ isOpen: boolean; beat: Beat | null; content: string; loading: boolean }>({
     isOpen: false,
     beat: null,
@@ -19,7 +20,15 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onAddToCart }) => {
     loading: false
   });
 
-  const filteredBeats = MOCK_BEATS.filter(beat => {
+  useEffect(() => {
+    fetch('/api/beats')
+      .then(r => r.json())
+      .then(data => setBeats(Array.isArray(data) ? data : []))
+      .catch(() => setBeats([]))
+      .finally(() => setLoadingBeats(false));
+  }, []);
+
+  const filteredBeats = beats.filter(beat => {
     const matchesSearch = beat.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           beat.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesTab = activeTab === 'All' || beat.category === activeTab;
@@ -100,18 +109,25 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onAddToCart }) => {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {filteredBeats.map(beat => (
-          <BeatCard 
-            key={beat.id} 
-            beat={beat} 
-            onAddToCart={onAddToCart} 
-            onViewBreakdown={handleViewBreakdown}
-          />
-        ))}
-      </div>
+      {loadingBeats ? (
+        <div className="flex flex-col items-center justify-center py-32 space-y-6">
+          <div className="w-12 h-12 border-4 border-rays-forest border-t-rays-lime rounded-full animate-spin"></div>
+          <p className="text-rays-lime font-bold uppercase tracking-widest animate-pulse">Loading Catalog...</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {filteredBeats.map(beat => (
+            <BeatCard
+              key={beat.id}
+              beat={beat}
+              onAddToCart={onAddToCart}
+              onViewBreakdown={handleViewBreakdown}
+            />
+          ))}
+        </div>
+      )}
 
-      {filteredBeats.length === 0 && (
+      {!loadingBeats && filteredBeats.length === 0 && (
         <div className="text-center py-32 text-rays-white/50 font-bold uppercase tracking-widest">
           No {activeTab === 'Loop' ? 'loops' : activeTab === 'Loop Pack' ? 'loop packs' : 'sounds'} found matching "{searchTerm}".
         </div>
