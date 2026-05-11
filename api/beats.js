@@ -1,4 +1,6 @@
 module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
   if (req.method !== 'GET') return res.status(405).end();
 
   const csvUrl = process.env.GOOGLE_SHEET_CSV_URL;
