@@ -87,12 +87,6 @@ const App: React.FC = () => {
           <p>&copy; {new Date().getFullYear()} Mobile Money Beats by Skimp. All rights reserved.</p>
           <p className="mt-3 text-rays-lime/50">Powered by Stripe & Google GenAI</p>
           
-          {/* Subtle Admin Link */}
-          <div className="mt-12">
-            <Link to="/admin" className="text-rays-forest hover:text-rays-lime transition-colors">
-              Producer Login
-            </Link>
-          </div>
         </div>
       </footer>
     </div>
